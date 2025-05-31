@@ -25,7 +25,7 @@ io.on('connection', (socket) => {
          if(filter.isProfane(message)){
             return callback('Profinity is not allowed')
          }
-
+           
          io.emit('message', message )
          callback("")
     })
