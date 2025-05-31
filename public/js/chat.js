@@ -21,7 +21,12 @@ document.querySelector('#send-location').addEventListener('click', () => {
         return alert('Not supported')
      }
      navigator.geolocation.getCurrentPosition((position) =>{
-        socket.emit('sendLocation', position)
-        }
-     )
+        socket.emit('sendLocation', position , (error) => {
+            if(error){
+                return console.log(error)
+            }
+            console.log("Location shared")
+        })
+    })
 })
+
