@@ -16,7 +16,7 @@ app.use(express.static(publicDirectoryPath))
 io.on('connection', (socket) => {
     console.log('New WebSocket connection')
 
-    // socket.emit('message', '!Welcome' )
+    socket.emit('message', '!Welcome' )
 
     socket.broadcast.emit('message', 'A new user is joined' )
 
