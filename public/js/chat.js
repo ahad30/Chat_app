@@ -1,15 +1,21 @@
 const socket = io()
 
+// Elements
 const $messageForm = document.querySelector('#message-form')
-const $mesaageFormInput = $messageForm.querySelector('input')
+const $messageFormInput = $messageForm.querySelector('input')
 const $messageFormButton = $messageForm.querySelector('button')
 const $sendLocationButton = document.querySelector('#send-location')
+const $messages = document.querySelector('#messages')
 
-
-
+//Template
+const messageTemplate = document.querySelector('#message-template').innerHTML
 
 socket.on('message', (message) => {
     console.log(message)
+    const html = Mustache.render(messageTemplate, {
+        message
+    }) 
+    $messages.insertAdjacentHTML('beforeend', html)
 })
 
 document.querySelector('#message-form').addEventListener('submit', (e) => {
@@ -17,13 +23,14 @@ document.querySelector('#message-form').addEventListener('submit', (e) => {
     $messageFormButton.setAttribute('disabled' , 'disabled')
     const message = e.target.elements.message.value
     socket.emit('sendMessage' , message, (error) => {
-     $messageFormButton.removeAttribute('disabled')
-     $mesaageFormInput.value = ''
-     $mesaageFormInput.focus()
-
-        if(error){
+          if(error){
             return console.log(error)
         }
+     $messageFormButton.removeAttribute('disabled')
+     $messageFormInput.value = ''
+     $messageFormInput.focus()
+
+      
         console.log("The Message was delivered")
     } )
  
