@@ -32,15 +32,12 @@ document.querySelector('#message-form').addEventListener('submit', (e) => {
     $messageFormButton.setAttribute('disabled' , 'disabled')
     const message = e.target.elements.message.value
     socket.emit('sendMessage' , message, (error) => {
-          if(error){
-            return console.log(error)
-        }
-     $messageFormButton.removeAttribute('disabled')
+    $messageFormButton.removeAttribute('disabled')
      $messageFormInput.value = ''
      $messageFormInput.focus()
-
-      
-        console.log("The Message was delivered")
+     if(message === '') return alert('Please type something first')
+     if(error) return alert('Profinity Not allowed')
+     
     } )
  
 })
