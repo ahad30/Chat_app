@@ -28,8 +28,8 @@ const addUser = ({id , username, room}) => {
 
 
 const getUserById =  (id) => {
-    const allUsers = users.find((user) => user.id === id)
-    return allUsers;
+    const user = users.find((user) => user.id === id)
+    return user;
 }
 
 const getUsersInRoom =  (room) => {
