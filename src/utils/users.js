@@ -27,6 +27,19 @@ const addUser = ({id , username, room}) => {
 }
 
 
+const getUserById =  (id) => {
+    const allUsers = users.find((user) => user.id === id)
+    return allUsers;
+}
+
+const getUsersInRoom =  (room) => {
+    const rooms = users.filter((user) => user.room === room)
+    return rooms;
+}
+
+
+
+
 
 const removeUser =  (id) => {
     const index = users.findIndex((user) => user.id === id)
@@ -36,13 +49,27 @@ const removeUser =  (id) => {
     }
 }
 
-console.log(users)
- addUser({
-    id:1,
-    username:"Ahad",
-    room: "ahusha"
- })
- console.log(users)
+//  addUser({
+//     id:1,
+//     username:"Ahad",
+//     room: "ahusha"
+//  })
+//  addUser({
+//     id:2,
+//     username:"Nusha",
+//     room: "ahusha"
+//  })
+//  addUser({
+//     id:3,
+//     username:"Nawar",
+//     room: "South City"
+//  })
 
- const removedUser = removeUser(1)
- console.log(users)
+
+
+module.exports = {
+    addUser,
+    getUserById,
+    getUsersInRoom,
+    removeUser
+}
