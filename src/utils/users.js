@@ -49,22 +49,6 @@ const removeUser =  (id) => {
     }
 }
 
-//  addUser({
-//     id:1,
-//     username:"Ahad",
-//     room: "ahusha"
-//  })
-//  addUser({
-//     id:2,
-//     username:"Nusha",
-//     room: "ahusha"
-//  })
-//  addUser({
-//     id:3,
-//     username:"Nawar",
-//     room: "South City"
-//  })
-
 
 
 module.exports = {
