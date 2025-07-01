@@ -39,8 +39,6 @@ const getUsersInRoom =  (room) => {
 
 
 
-
-
 const removeUser =  (id) => {
     const index = users.findIndex((user) => user.id === id)
 
