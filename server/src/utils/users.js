@@ -1,5 +1,6 @@
 const users = []
 
+
 const addUser = ({id , username, room}) => {
      username = username.trim().toLowerCase()
      room = room.trim().toLowerCase()
@@ -36,6 +37,8 @@ const getUsersInRoom =  (room) => {
     const rooms = users.filter((user) => user.room === room)
     return rooms;
 }
+console.log(users)
+
 
 
 
@@ -46,7 +49,6 @@ const removeUser =  (id) => {
         return users.splice(index, 1)[0]
     }
 }
-
 
 
 module.exports = {
