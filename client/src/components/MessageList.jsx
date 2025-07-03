@@ -1,19 +1,29 @@
-import { useEffect, useRef, useState } from 'react';
-import { useSocket } from '../context/SocketProvider';
-import Message from './Message';
+import { useEffect, useRef, useState } from "react";
+import { useSocket } from "../context/SocketProvider";
 
 const MessageList = ({ username, room, users, setUsers }) => {
-  console.log(username)
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
-  const [currentUser , setCurrentUser] = useState("")
+  // const [currentUser, setCurrentUser] = useState("");
   const messagesEndRef = useRef(null);
+  const currentUser = username.toLowerCase()
+  console.log(currentUser)
 
-  console.log(messages)
-  console.log(users)
+  console.log("Messages", messages);
+  console.log("Users", users);
 
   useEffect(() => {
     if (!socket) return;
+
+    // Join room
+    socket.on("connect", () => {
+      console.log("Connected socket:", socket.id);
+      socket.emit("join", { username, room }, (error) => {
+        if (error) {
+          alert(error);
+        }
+      });
+    });
 
     const handleMessage = (message) => {
       setMessages((prev) => [...prev, message]);
@@ -24,42 +34,56 @@ const MessageList = ({ username, room, users, setUsers }) => {
     };
 
     const handleRoomData = ({ users: roomUsers }) => {
-      console.log(ro)
       setUsers(roomUsers);
     };
 
-    // Join room
-    socket.emit("join", { username, room }, (error) => {
-      if (error) {
-        alert(error);
-      }
-    });
-
     // Set up listeners
-    socket.on('message', handleMessage);
-    socket.on('messageLocation', handleLocationMessage);
-    socket.on('roomData', handleRoomData);
+    socket.on("message", handleMessage);
+    socket.on("messageLocation", handleLocationMessage);
+    socket.on("roomData", handleRoomData);
 
+    // ✅ CLEAN UP to avoid duplicates
     return () => {
-      // Clean up listeners
-      socket.off('message', handleMessage);
-      socket.off('messageLocation', handleLocationMessage);
-      socket.off('roomData', handleRoomData);
+      socket.off("connect");
+      socket.off("message", handleMessage);
+      socket.off("messageLocation", handleLocationMessage);
+      socket.off("roomData", handleRoomData);
     };
   }, [socket, username, room, setUsers]);
 
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   return (
     <div className="space-y-4">
       {messages.map((message, index) => (
-        <Message 
-          key={`${message.createdAt}-${index}`} 
-          message={message} 
-          isCurrentUser={message.username === username} 
-        />
+        <div
+          key={index}
+          className={`max-w-xs px-4 py-2 rounded-lg 
+    ${
+      message.username === currentUser
+        ? "bg-blue-500 text-white ml-auto" 
+        : "bg-gray-200 text-gray-800"
+    }  `}
+        >
+          <p className="text-xs mt-1 opacity-70">
+            {message.username} •{" "}
+            {new Date(message.createdAt).toLocaleTimeString()}
+          </p>
+          {message.url ? (
+            <a
+              href={message.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-400 hover:underline"
+            >
+              My current location
+            </a>
+          ) : (
+            <p>{message.text}</p>
+          )}
+        </div>
       ))}
       <div ref={messagesEndRef} />
     </div>

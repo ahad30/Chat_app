@@ -26,6 +26,8 @@ const addUser = ({id , username, room}) => {
      users.push(user)
     return {user}    
 }
+console.log("Current users:", users);
+
 
 
 const getUserById =  (id) => {
@@ -37,18 +39,18 @@ const getUsersInRoom =  (room) => {
     const rooms = users.filter((user) => user.room === room)
     return rooms;
 }
-console.log(users)
 
+const removeUser = (id) => {
+  const index = users.findIndex((user) => user.id === id);
+  if (index !== -1) {
+    const removed = users.splice(index, 1)[0];
+    console.log("Removed user:", removed);
+    return removed;
+  } else {
+    console.log("User not found with id:", id);
+  }
+};
 
-
-
-const removeUser =  (id) => {
-    const index = users.findIndex((user) => user.id === id)
-
-    if(index !== -1){
-        return users.splice(index, 1)[0]
-    }
-}
 
 
 module.exports = {

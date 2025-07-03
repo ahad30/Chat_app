@@ -10,7 +10,7 @@ const Chat = () => {
   const username = searchParams.get('username');
   const room = searchParams.get('room');
   const [users, setUsers] = useState([]);
-  console.log(users)
+   console.log(users)
 
   useEffect(() => {
     if (!username || !room) {

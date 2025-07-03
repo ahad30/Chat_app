@@ -9,19 +9,21 @@ export const useSocket = () => {
   if (context === undefined) {
     throw new Error('useSocket must be used within a SocketProvider');
   }
-  return context;
+  return context; 
 };
 
 export const SocketProvider = ({ children }) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-   const socketInstance = io('http://localhost:5000', {
-  withCredentials: true,
-  transports: ['websocket', 'polling'],
-});
+     if (socket) return; 
+   const socketInstance = io('http://localhost:5000');
+  setSocket(socketInstance);
 
-    setSocket(socketInstance);
+   return () => {
+    socketInstance.disconnect();
+    console.log('Socket disconnected');
+  };
 
   }, []);
 
