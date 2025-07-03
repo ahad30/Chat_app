@@ -4,13 +4,11 @@ import { useSocket } from "../context/SocketProvider";
 const MessageList = ({ username, room, users, setUsers }) => {
   const socket = useSocket();
   const [messages, setMessages] = useState([]);
-  // const [currentUser, setCurrentUser] = useState("");
   const messagesEndRef = useRef(null);
   const currentUser = username.toLowerCase()
-  console.log(currentUser)
 
-  console.log("Messages", messages);
-  console.log("Users", users);
+  // console.log("Messages", messages);
+  // console.log("Users", users);
 
   useEffect(() => {
     if (!socket) return;

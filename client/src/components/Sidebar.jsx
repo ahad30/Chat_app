@@ -6,7 +6,7 @@ const Sidebar = ({ room, users, setUsers }) => {
 
   useEffect(() => {
      if (!socket) return; 
-    socket.on('roomData', ({ users }) => {
+     socket.on('roomData', ({ users }) => {
       setUsers(users);
     });
 
