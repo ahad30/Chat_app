@@ -7,7 +7,8 @@ import { useSocket } from '@/context/SocketProvider';
 import toast from 'react-hot-toast';
 
 const Chat = () => {
-    const socket = useSocket();
+  const socket = useSocket();
+  console.log(socket)
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const username = searchParams.get('username');
@@ -16,25 +17,32 @@ const Chat = () => {
   const navigate = useNavigate()
 
 
-   useEffect(() => {
+useEffect(() => {
     if (!socket) return;
 
-    //  if (socket?.connected) {
-      socket.on("connect", () => {
-      socket.emit("join", { username, room }, (error) => {
+   socket.on('connect', () => {
+   socket.emit("join", { 
+        username: username.trim().toLowerCase(), 
+        room: room.trim().toLowerCase() 
+    }, (error) => {
         if (error) {
-          toast.error(error);
-          navigate("/")
-          
+            toast.error(error);
+            navigate("/");
         }
-      });
     });
-    //  }
 
-    return () => {
-      socket.off("connect");
-    };
-  }, [socket, username, room]);
+   })
+   
+   return () => {
+     socket.off('connect')
+   }
+
+
+
+}, [socket, username, room, navigate]);
+
+
+
 
 
   return (

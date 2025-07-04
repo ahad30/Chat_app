@@ -31,10 +31,12 @@ io.on('connection', (socket) => {
   console.log('New WebSocket connection');
 
   socket.on('join', (options, callback) => {
+    // console.log('Join user',options)
     const { error, user } = addUser({ id: socket.id, ...options });
     if (error) {
       return callback(error);
     }
+    console.log(user)  
 
     socket.join(user.room);
     socket.emit('message', generateMessage('Admin', 'Welcome!'));

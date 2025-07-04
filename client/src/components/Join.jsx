@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const Join = () => {
@@ -6,6 +6,25 @@ const Join = () => {
   const [room, setRoom] = useState('');
   const navigate = useNavigate();
   
+
+
+  useEffect(() => {
+  const handleBackButton = (event) => {
+    event.preventDefault();
+    toast.error("Back navigation is disabled in chat");
+    window.history.pushState(null, "", window.location.href);
+  };
+
+  window.history.pushState(null, "", window.location.href);
+  window.addEventListener("popstate", handleBackButton);
+
+  return () => {
+    window.removeEventListener("popstate", handleBackButton);
+  };
+}, []);
+
+
+
 
   const handleSubmit = (e) => {
     e.preventDefault();

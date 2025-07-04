@@ -1,11 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/SocketProvider";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
+
 
 const MessageList = ({ username }) => {
   const socket = useSocket();
-  console.log(socket)
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const currentUser = username.toLowerCase()
@@ -31,6 +29,9 @@ const MessageList = ({ username }) => {
       socket.off("messageLocation", handleLocationMessage);
     };
   }, [socket]);
+
+
+
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
