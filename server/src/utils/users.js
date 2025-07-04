@@ -5,6 +5,7 @@ const addUser = ({id , username, room}) => {
      username = username.trim().toLowerCase()
      room = room.trim().toLowerCase()
 
+
      if(!username || !room) {
         return {
             error: "Username and room are required"
@@ -12,9 +13,10 @@ const addUser = ({id , username, room}) => {
      }
 
      const existingUser = users.find((user) => {
-        return user.room.toLowerCase() && user.username.toLowerCase() === username
+        return user.room && user.username === username
       }
     )
+    console.log("Exist",existingUser)
      
      if(existingUser) {
         return {

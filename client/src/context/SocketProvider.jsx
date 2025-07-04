@@ -25,7 +25,7 @@ export const SocketProvider = ({ children }) => {
 
    return () => {
     socketInstance.disconnect();
-    // console.log('Socket disconnected');
+    console.log('Socket disconnected');
   };
 
   }, []);

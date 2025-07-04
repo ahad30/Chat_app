@@ -1,7 +1,10 @@
+import { useSocket } from '@/context/SocketProvider';
 import { useEffect, useState } from 'react';
+import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 
 const Join = () => {
+    const socket = useSocket();
   const [username, setUsername] = useState('');
   const [room, setRoom] = useState('');
   const navigate = useNavigate();
@@ -29,6 +32,15 @@ const Join = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!username || !room) return;
+       socket.emit("join", { 
+        username: username.trim().toLowerCase(), 
+        room: room.trim().toLowerCase() 
+    }, (error) => {
+        if (error) {
+            toast.error(error);
+            navigate("/");
+        }
+    });
     navigate(`/chat?username=${username}&room=${room}`);
   };
 
@@ -66,9 +78,11 @@ const Join = () => {
             />
           </div>
           <button
+            
             type="submit"
             className="w-full px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
           >
+           
             Join
           </button>
         </form>
