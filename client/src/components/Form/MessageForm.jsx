@@ -1,22 +1,27 @@
 import { useSocket } from '@/context/SocketProvider';
-import { useState, useContext } from 'react';
+import { useState } from 'react';
+import toast from 'react-hot-toast';
 
 const MessageForm = () => {
   const [message, setMessage] = useState('');
+  const [isSending, setIsSending] = useState(false);
+  const [isSendingLocation, setIsSendingLocation] = useState(false);
   const socket = useSocket();
-
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!message.trim()) return;
+    if (!message.trim()) return toast.error("Please type first");
+
+    setIsSending(true); // Disable send button
 
     socket.emit('sendMessage', message, (error) => {
+      setIsSending(false)
       if (error) {
         alert(error);
+      } else {
+        setMessage('');
       }
     });
-
-    setMessage('');
   };
 
   const handleLocation = () => {
@@ -24,13 +29,18 @@ const MessageForm = () => {
       return alert('Geolocation is not supported by your browser');
     }
 
+    setIsSendingLocation(true); // Disable location button
+
     navigator.geolocation.getCurrentPosition((position) => {
-      socket.emit('sendLocation', position , (error) => {
-      if (error) {
-        return console.log(error);
-      }
-      console.log("Location shared");
-    });
+      socket.emit('sendLocation', position, (error) => {
+        setIsSendingLocation(false);
+
+        if (error) {
+          console.log(error);
+        } else {
+          console.log("Location shared");
+        }
+      });
     });
   };
 
@@ -45,16 +55,22 @@ const MessageForm = () => {
       />
       <button
         type="submit"
-        className="px-4 py-2 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        disabled={isSending}
+        className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 ${
+          isSending ? 'bg-indigo-300 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700 focus:ring-indigo-500'
+        }`}
       >
-        Send
+        {isSending ? 'Sending...' : 'Send'}
       </button>
       <button
         type="button"
         onClick={handleLocation}
-        className="px-4 py-2 text-white bg-gray-600 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+        disabled={isSendingLocation}
+        className={`px-4 py-2 text-white rounded-md focus:outline-none focus:ring-2 ${
+          isSendingLocation ? 'bg-gray-300 cursor-not-allowed' : 'bg-gray-600 hover:bg-gray-700 focus:ring-gray-500'
+        }`}
       >
-        Location
+        {isSendingLocation ? 'Sharing...' : 'Location'}
       </button>
     </form>
   );

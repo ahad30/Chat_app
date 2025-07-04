@@ -1,22 +1,41 @@
 import { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import MessageList from './MessageList';
 import MessageForm from './Form/MessageForm';
+import { useSocket } from '@/context/SocketProvider';
+import toast from 'react-hot-toast';
 
 const Chat = () => {
+    const socket = useSocket();
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
   const username = searchParams.get('username');
   const room = searchParams.get('room');
   const [users, setUsers] = useState([]);
-   console.log(users)
+  const navigate = useNavigate()
 
-  useEffect(() => {
-    if (!username || !room) {
-      window.location.href = '/';
-    }
-  }, [username, room]);
+
+   useEffect(() => {
+    if (!socket) return;
+
+    //  if (socket?.connected) {
+      socket.on("connect", () => {
+      socket.emit("join", { username, room }, (error) => {
+        if (error) {
+          toast.error(error);
+          navigate("/")
+          
+        }
+      });
+    });
+    //  }
+
+    return () => {
+      socket.off("connect");
+    };
+  }, [socket, username, room]);
+
 
   return (
     <div className="flex h-screen bg-gray-100">

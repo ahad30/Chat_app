@@ -75,7 +75,7 @@ socket.on("roomData", ({ room, users }) => {
     document.querySelector(".chat__sidebar").innerHTML = html;
 });
 
-document.querySelector("#message-form").addEventListener("submit", (e) => {
+$messageForm.addEventListener("submit", (e) => {
   e.preventDefault();
   $messageFormButton.setAttribute("disabled", "disabled");
   const message = e.target.elements.message.value;

@@ -1,27 +1,19 @@
 import { useEffect, useRef, useState } from "react";
 import { useSocket } from "../context/SocketProvider";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
-const MessageList = ({ username, room, users, setUsers }) => {
+const MessageList = ({ username }) => {
   const socket = useSocket();
+  console.log(socket)
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const currentUser = username.toLowerCase()
 
-  // console.log("Messages", messages);
-  // console.log("Users", users);
 
   useEffect(() => {
     if (!socket) return;
 
-    // Join room
-    socket.on("connect", () => {
-      console.log("Connected socket:", socket.id);
-      socket.emit("join", { username, room }, (error) => {
-        if (error) {
-          alert(error);
-        }
-      });
-    });
 
     const handleMessage = (message) => {
       setMessages((prev) => [...prev, message]);
@@ -31,23 +23,14 @@ const MessageList = ({ username, room, users, setUsers }) => {
       setMessages((prev) => [...prev, message]);
     };
 
-    const handleRoomData = ({ users: roomUsers }) => {
-      setUsers(roomUsers);
-    };
-
-    // Set up listeners
     socket.on("message", handleMessage);
     socket.on("messageLocation", handleLocationMessage);
-    socket.on("roomData", handleRoomData);
 
-    // ✅ CLEAN UP to avoid duplicates
     return () => {
-      socket.off("connect");
       socket.off("message", handleMessage);
       socket.off("messageLocation", handleLocationMessage);
-      socket.off("roomData", handleRoomData);
     };
-  }, [socket, username, room, setUsers]);
+  }, [socket]);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });

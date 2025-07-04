@@ -18,11 +18,14 @@ export const SocketProvider = ({ children }) => {
   useEffect(() => {
      if (socket) return; 
    const socketInstance = io('http://localhost:5000');
-  setSocket(socketInstance);
+    // console.log('Socket Connected');
+    setSocket(socketInstance);
+
+
 
    return () => {
     socketInstance.disconnect();
-    console.log('Socket disconnected');
+    // console.log('Socket disconnected');
   };
 
   }, []);
